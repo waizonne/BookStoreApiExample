@@ -23,6 +23,7 @@ app.get('/books/:id', (req, res) => {
 })
 
 app.post('/books', (req, res) => {
+    req.body.id = Math.max(...books.map(o => o.id), 0) + 1;
     books.push(req.body)
     saveBook(books)
     res.status(201).json(req.body)
@@ -36,11 +37,12 @@ app.put('/books/:id', (req, res) => {
 })
 
 app.delete('/books/:id', (req, res) => {
-    const deletedIndex = books.findIndex(book => book.id === req.params.id)
-    books.splice(deletedIndex, 1)
+    const deletedIndex = books.findIndex(book => book.id == req.params.id)
+    if (deletedIndex > -1)
+        books.splice(deletedIndex, 1)
     saveBook(books)
     res.status(204).send()
- })
+})
 
 app.listen(3000, () => {
     console.log('Start server at port 3000.')
